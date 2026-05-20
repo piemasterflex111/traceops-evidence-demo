@@ -21,7 +21,7 @@ The repo is meant to show a practical internal-tool pattern:
 > Granular redacted private-workbench preview. Sensitive text values are hidden while preserving the workflow structure.  
 > The public repository contains a smaller fake-data evidence demo.
 
-![TraceOps granular redacted workflow showcase](docs/assets/traceops_granular_redacted_showcase_grid.png)
+![TraceOps granular redacted workflow showcase](./docs/assets/traceops_granular_redacted_showcase_grid.png)
 
 ## Core Workflow
 
