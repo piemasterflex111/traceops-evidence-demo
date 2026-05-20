@@ -4,7 +4,8 @@ Demo Manufacturing Company is hiring for a fake role used only in this public de
 
 Requirements:
 - Python automation for validation workflows.
-- Hardware station debugging.
-- Firmware logs and validation evidence summaries.
-- Fixture reliability analysis and operator training.
+- Telemetry log review and evidence summaries.
+- Validation station bring-up and fixture lane debugging.
+- Repeatable failure documentation and operator handoff.
 - Production database ownership.
+- Production firmware ownership.

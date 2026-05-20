@@ -1,7 +1,10 @@
 # Limitations
 
-- The evidence and role description are fake demo files.
-- Matching uses simple keywords, not semantic retrieval.
-- The workflow does not call an LLM.
-- The app does not connect to private databases or job trackers.
-- Unsupported claims are retained in the report so reviewers can see what was not proven.
+- This repo uses fake data only.
+- Matching is deterministic keyword matching, not semantic review.
+- There is no LLM integration.
+- There is no database.
+- There are no external APIs.
+- The demo does not claim to operate on live systems.
+- Unsupported claims are retained for review instead of being resolved automatically.
+- The public safety scanner uses fake placeholder terms. It is a repo hygiene check, not a full data-loss prevention tool.

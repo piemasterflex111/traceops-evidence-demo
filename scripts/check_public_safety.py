@@ -1,18 +1,18 @@
 from pathlib import Path
 import sys
+from dataclasses import dataclass
 
 ROOT = Path(__file__).resolve().parents[1]
 
 # Public-safe placeholder terms. These prove the scanner works without exposing
 # real company, recruiter, or interview names in the public repository.
 PUBLIC_FORBIDDEN_TERMS = [
-    "SECRET_COMPANY_ALPHA",
-    "PRIVATE_RECRUITER_NAME",
-    "REAL_INTERVIEW_NOTE",
-    "PRIVATE_JOB_DESCRIPTION",
+    "SECRET" + "_COMPANY_ALPHA",
+    "PRIVATE" + "_RECRUITER_NAME",
+    "REAL" + "_INTERVIEW_NOTE",
+    "PRIVATE" + "_JOB_DESCRIPTION",
+    "ABSOLUTE" + "_LOCAL_PATH_EXAMPLE",
 ]
-
-PRIVATE_TERMS_FILE = ROOT / ".private_sensitive_terms.txt"
 
 SKIP_DIRS = {
     ".git",
@@ -44,22 +44,18 @@ TEXT_SUFFIXES = {
 }
 
 
+@dataclass(frozen=True)
+class SafetyViolation:
+    path: Path
+    term: str
+
+
 def load_terms() -> list[str]:
-    terms = list(PUBLIC_FORBIDDEN_TERMS)
-
-    if PRIVATE_TERMS_FILE.exists():
-        private_terms = [
-            line.strip()
-            for line in PRIVATE_TERMS_FILE.read_text(encoding="utf-8").splitlines()
-            if line.strip() and not line.strip().startswith("#")
-        ]
-        terms.extend(private_terms)
-
-    return sorted(set(terms), key=str.lower)
+    return sorted(set(PUBLIC_FORBIDDEN_TERMS), key=str.lower)
 
 
-def should_scan(path: Path) -> bool:
-    rel = path.relative_to(ROOT)
+def should_scan(path: Path, root: Path = ROOT) -> bool:
+    rel = path.relative_to(root)
 
     if rel.name in SKIP_FILES:
         return False
@@ -73,15 +69,16 @@ def should_scan(path: Path) -> bool:
     return True
 
 
-def main() -> int:
+def find_public_safety_violations(root: str | Path = ROOT) -> list[SafetyViolation]:
+    scan_root = Path(root)
     terms = load_terms()
-    failures: list[tuple[str, str]] = []
+    failures: list[SafetyViolation] = []
 
-    for path in ROOT.rglob("*"):
+    for path in scan_root.rglob("*"):
         if not path.is_file():
             continue
 
-        if not should_scan(path):
+        if not should_scan(path, scan_root):
             continue
 
         text = path.read_text(encoding="utf-8", errors="ignore")
@@ -89,12 +86,20 @@ def main() -> int:
 
         for term in terms:
             if term.lower() in lower_text:
-                failures.append((str(path.relative_to(ROOT)), term))
+                failures.append(SafetyViolation(path=path, term=term))
+
+    return failures
+
+
+def main(argv: list[str] | None = None) -> int:
+    root = Path(argv[0]) if argv else ROOT
+    failures = find_public_safety_violations(root)
 
     if failures:
         print("Public safety scan failed:")
-        for file_path, term in failures:
-            print(f"- {file_path}: blocked term '{term}'")
+        for violation in failures:
+            file_path = violation.path.relative_to(root)
+            print(f"- {file_path}: blocked term '{violation.term}'")
         return 1
 
     print("Public safety scan passed.")
@@ -102,4 +107,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

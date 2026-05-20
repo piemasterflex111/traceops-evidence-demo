@@ -1,45 +1,112 @@
-# Public Demo Repo Safety Rules
+# TraceOps Evidence Demo: Public Repo Rules
 
-This repository must be built from scratch as a public-safe demo.
+This is a public-safe portfolio repository.
 
-Hard rules:
-- Do not read from or copy files from C:\AIWork\10_ACTIVE_PROJECTS\agentic_ai_job_skill_lab.
-- Do not use real company names.
-- Do not use real recruiter names.
-- Do not use real interview notes.
-- Do not use real job descriptions.
-- Do not use private screenshots.
-- Do not use private databases.
-- Do not use generated packets or reports from any private job tracker.
-- Use fake demo data only.
-- Use neutral names such as Demo Manufacturing Company, Demo Firmware Validation Engineer, demo_validation_notes.md, and sample_role_description.md.
-- Build a small, clean, auditable project that demonstrates the concept without exposing private data.
+## Hard Privacy Rules
 
-Forbidden terms:
-- Hadrian
-- Anduril
-- Tesla
-- Innoflight
-- Ouster
-- Chroma
-- UST
-- Apex
-- Vaco
-- Rajesh
-- Adam
-- Matt
-- George
-- Alexandria
-- Edward
+Work inside this repository only. Do not inspect, copy, import, summarize, or migrate files from any other local repo or folder.
 
-Public repo goal:
-Show the engineering pattern:
-- evidence ingestion
-- source provenance
-- safe claim generation
-- validation/reporting workflow
-- tests
+Do not use:
+
+- real company names
+- recruiter names
+- interview notes
+- real job descriptions
+- personal evidence files
+- private screenshots
+- private databases
+- generated job-tracker reports
+- absolute local paths
+- usernames
+- local machine folder names
+- prompt files
+- private sensitive-term files
+
+Use fake demo data only.
+
+Allowed fake names:
+
+- Demo Manufacturing Company
+- Demo Firmware Validation Engineer
+- Demo Test Automation Engineer
+- Demo Validation Station
+- Demo Evidence Source
+
+## Public Repo Purpose
+
+This repo demonstrates a practical Python/FastAPI internal-tool pattern:
+
+```text
+role requirement
+-> evidence source
+-> claim classification
+-> source provenance
+-> reviewable report
+```
+
+The repo should feel like a small engineering workflow tool, not a toy script and not an inflated product pitch.
+
+## Tone Rules
+
+Use direct engineer-to-engineer language.
+
+Avoid hype. Prefer:
+
+- source-backed
+- reviewable
+- traceable
 - fake demo data
-- clear README
+- supported claim
+- partial claim
+- unsupported claim
+- repo-relative path
+- validation workflow
+- evidence report
 
-Do not attempt to preserve every feature from the private repo.
+## Technical Boundaries
+
+Allowed:
+
+- Python
+- FastAPI
+- Pydantic
+- pytest
+- simple HTML/Jinja2
+- markdown reports
+- fake markdown evidence
+- public safety scanner
+
+Not allowed:
+
+- LLM integration
+- external APIs
+- databases
+- private data support
+- screenshots copied from another project
+- generated outputs committed under outputs/
+- prompt files committed to Git
+- private sensitive-term files committed to Git
+
+## Required Checks Before Any Commit
+
+Run:
+
+```powershell
+python -m pytest -q
+python scripts/check_public_safety.py
+python scripts/run_demo.py
+python scripts/check_public_safety.py
+```
+
+Public committed files must not contain:
+
+- absolute paths
+- local machine paths
+- private names
+- usernames
+- private prompt files
+- private sensitive-term files
+
+Generated outputs belong in outputs/ and should be ignored.
+
+Example report output belongs in docs/examples/.

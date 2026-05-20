@@ -2,13 +2,15 @@
 __pycache__/
 .pytest_cache/
 .pytest_tmp/
+.env
+.env.*
 *.pyc
+*.db
+*.sqlite
+*.sqlite3
 outputs/
-
-# Local-only safety/config files
 .private_sensitive_terms.txt
 CODEX_PUBLIC_DEMO_PROMPT.md
-outputs/
-__pycache__/
-.pytest_cache/
-.venv/
+_safety_snapshot/
+repo_audit/
+*.log

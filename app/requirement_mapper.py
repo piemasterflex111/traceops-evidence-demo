@@ -15,6 +15,9 @@ STOPWORDS = {
     "with",
 }
 
+NON_EVIDENCE_SOURCE_NAMES = {"unsupported_claim_examples.md"}
+UNSUPPORTED_REVIEW_TERMS = {"ownership"}
+
 
 def extract_requirements(role_text: str) -> list[str]:
     requirements: list[str] = []
@@ -46,13 +49,27 @@ def map_requirements_to_evidence(
         partial_source_paths: list[str] = []
         matched_terms: set[str] = set()
 
+        if UNSUPPORTED_REVIEW_TERMS.intersection(terms):
+            matches.append(
+                RequirementMatch(
+                    requirement=requirement,
+                    status="unsupported",
+                    source_paths=[],
+                    matched_terms=[],
+                )
+            )
+            continue
+
         for source in evidence_sources:
-            content = source.content.lower()
-            source_terms = {term for term in terms if term in content}
+            if source.source_path.split("/")[-1] in NON_EVIDENCE_SOURCE_NAMES:
+                continue
+
+            content_terms = set(_keywords(source.content))
+            source_terms = {term for term in terms if term in content_terms}
             if source_terms:
                 matched_terms.update(source_terms)
                 partial_source_paths.append(source.source_path)
-            if terms and all(term in content for term in terms):
+            if terms and all(term in content_terms for term in terms):
                 source_paths.append(source.source_path)
 
         if source_paths:

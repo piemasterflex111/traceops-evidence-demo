@@ -1,8 +1,15 @@
 from app.schemas import Claim, RequirementMatch
 
+VALID_LABELS = {"supported", "partial", "unsupported"}
+
 
 def classify_claim(match: RequirementMatch) -> Claim:
-    if match.status == "supported" and match.source_paths:
+    if match.status not in VALID_LABELS:
+        status = "unsupported"
+    else:
+        status = match.status
+
+    if status == "supported" and match.source_paths:
         return Claim(
             requirement=match.requirement,
             label="supported",
@@ -11,7 +18,7 @@ def classify_claim(match: RequirementMatch) -> Claim:
             source_paths=match.source_paths,
         )
 
-    if match.status == "partial" and match.source_paths:
+    if status == "partial" and match.source_paths:
         return Claim(
             requirement=match.requirement,
             label="partial",

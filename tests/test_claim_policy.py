@@ -58,3 +58,17 @@ def test_partial_claim_lists_weak_source_evidence():
 
     assert claim.label == "partial"
     assert claim.source_paths == ["data/demo_evidence/sample_python_tooling_notes.md"]
+
+
+def test_unsupported_claim_is_not_promoted_when_matched_terms_are_present():
+    match = RequirementMatch(
+        requirement="Production firmware ownership",
+        status="unsupported",
+        source_paths=["data/demo_evidence/unsupported_claim_examples.md"],
+        matched_terms=["firmware", "ownership"],
+    )
+
+    claim = classify_claim(match)
+
+    assert claim.label == "unsupported"
+    assert claim.source_paths == []
