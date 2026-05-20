@@ -1,19 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "traceops-evidence-demo"
 version = "0.1.0"
-description = "Public-safe evidence workflow demo using fake data."
+description = "Public-safe evidence-to-requirement review demo."
 requires-python = ">=3.11"
 dependencies = [
-  "fastapi>=0.110",
-  "uvicorn>=0.27",
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.optional-dependencies]
 test = [
-  "pytest>=8.0",
+    "pytest",
+    "httpx",
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]
-addopts = "--basetemp=.pytest_tmp"
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["data*", "docs*", "outputs*", "scripts*", "tests*"]
