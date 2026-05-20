@@ -1,10 +1,15 @@
 # TraceOps Evidence Demo
 
-A public-safe Python/FastAPI demo for mapping fake engineering evidence to role requirements, classifying claims by support level, and writing source-backed review reports.
+A public-safe Python/FastAPI demo for mapping fake engineering evidence to
+role requirements, classifying claims by support level, and writing
+source-backed review reports.
 
 ## What This Is
 
-TraceOps Evidence Demo is a small review workflow built around fake demo data. It loads markdown evidence files, extracts requirements from a fake role description, maps requirements to evidence sources, applies a deterministic claim policy, and writes a markdown report that keeps source provenance visible.
+TraceOps Evidence Demo is a small review workflow built around fake demo data.
+It loads markdown evidence files, extracts requirements from a fake role
+description, maps requirements to evidence sources, applies a deterministic
+claim policy, and writes a markdown report that keeps source provenance visible.
 
 The repo is meant to show a practical internal-tool pattern:
 
@@ -18,7 +23,8 @@ The repo is meant to show a practical internal-tool pattern:
 
 ## Redacted Workflow Preview
 
-> Granular redacted private-workbench preview. Sensitive text values are hidden while preserving the workflow structure.  
+> Granular redacted private-workbench preview. Sensitive text values are hidden
+> while preserving the workflow structure.  
 > The public repository contains a smaller fake-data evidence demo.
 
 ![TraceOps granular redacted workflow showcase](./docs/assets/traceops_granular_redacted_showcase_grid.png)
@@ -46,15 +52,18 @@ flowchart LR
 - Writes `outputs/demo_report.md` from the demo workflow.
 - Provides a committed example report at `docs/examples/demo_report_example.md`.
 - Exposes the workflow through simple FastAPI routes.
-- Runs pytest coverage for evidence loading, mapping, claim policy, report output, routes, demo execution, and public safety scanning.
+- Runs pytest coverage for evidence loading, mapping, claim policy,
+  report output, routes, demo execution, and public safety scanning.
 
 ## Evidence Governance
 
 Reading evidence is not the same as trusting evidence. This demo keeps those steps separate.
 
 - Supported claims require direct source evidence and at least one source path.
-- Partial claims require weak or incomplete source evidence and at least one source path.
-- Unsupported claims have no source evidence, remain visible for review, and are not promoted.
+- Partial claims require weak or incomplete source evidence and at least one
+  source path.
+- Unsupported claims have no source evidence, remain visible for review, and
+  are not promoted.
 - Source paths in reports and API responses are repo-relative and use forward slashes.
 - Generated reports must not expose local machine paths.
 
@@ -68,7 +77,8 @@ Run the app with Uvicorn and inspect these routes:
 - `GET /report`
 - `POST /demo/report`
 
-The UI is intentionally simple. It shows evidence inventory, requirements, decision counts, claim sections, source provenance, and public safety status.
+The UI is intentionally simple. It shows evidence inventory, requirements,
+decision counts, claim sections, source provenance, and public safety status.
 
 ## Example Decision Table
 
@@ -83,7 +93,8 @@ The UI is intentionally simple. It shows evidence inventory, requirements, decis
 
 ```text
 app/
-  FastAPI routes, evidence loading, requirement mapping, claim policy, report writing
+  FastAPI routes, evidence loading, requirement mapping, claim policy,
+  report writing
 data/demo_evidence/
   fake role description and fake engineering evidence notes
 docs/
@@ -107,7 +118,8 @@ python -m uvicorn app.main:app --reload
 python scripts/run_demo.py
 ```
 
-The generated report is written to `outputs/demo_report.md`. Generated output stays out of Git.
+The generated report is written to `outputs/demo_report.md`. Generated output
+stays out of Git.
 
 ## Running Tests
 
@@ -137,7 +149,9 @@ Keep local-only and generated files out of the public repo:
 
 ## Public-Data Safety
 
-All included evidence is fake demo data. The scanner in `scripts/check_public_safety.py` checks public text files for fake blocked placeholder terms and skips generated output and local cache folders.
+All included evidence is fake demo data. The scanner in
+`scripts/check_public_safety.py` checks public text files for fake blocked
+placeholder terms and skips generated output and local cache folders.
 
 ## Current Limitations
 
