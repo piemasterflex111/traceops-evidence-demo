@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.pytest_tmp/
+*.pyc
+outputs/
+
+# Local-only safety/config files
+.private_sensitive_terms.txt
+CODEX_PUBLIC_DEMO_PROMPT.md
+outputs/
+__pycache__/
+.pytest_cache/
+.venv/
