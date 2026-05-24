@@ -100,6 +100,48 @@ The repo is meant to show a practical internal-tool pattern:
 
 ![TraceOps granular redacted workflow showcase](./docs/assets/traceops_granular_redacted_showcase_grid.png)
 
+## Published UI Companion: TraceOps Interview Command Center
+
+Published demo: https://traceops-interviewer.lovable.app
+
+TraceOps Interview Command Center is a public-safe React/TanStack UI companion for this evidence-governance workflow.
+
+The UI models applications, requirements, evidence cards, requirement-to-evidence mapping, interview packets, gap tracking, and honest risk framing. It uses anonymized demo data and intentionally disables backend API access in the public build.
+
+The purpose of the UI companion is to show how the TraceOps evidence-governance pattern can become a usable internal-tool dashboard.
+
+![TraceOps dashboard](docs/assets/traceops-command-center/01_dashboard_public_safe.png)
+
+### What the UI Companion Demonstrates
+
+- Internal tools UI design
+- Requirement-to-evidence mapping
+- Evidence policy status rendering
+- Gap tracking and safe interview framing
+- Interview packet workflow design
+- Public-safe anonymized demo data
+- Separation between frontend display and backend evidence governance
+
+### Evidence Library
+
+![TraceOps evidence library](docs/assets/traceops-command-center/02_evidence_library_public_safe.png)
+
+### Requirement-to-Evidence Matrix
+
+![TraceOps test automation matrix](docs/assets/traceops-command-center/03_aerospace_role_matrix_public_safe.png)
+
+![TraceOps backend matrix](docs/assets/traceops-command-center/04_fintech_role_matrix_public_safe.png)
+
+### Gap Tracker
+
+![TraceOps gap tracker](docs/assets/traceops-command-center/05_fintech_gap_tracker_public_safe.png)
+
+### UI Boundary
+
+The published UI companion does not claim autonomous AI verification.
+
+The public Lovable build renders governed demo values only. Backend API access is intentionally disabled in the public build. Future integration with this FastAPI repo would require authenticated backend endpoints where evidence policy, source provenance, safe-claim blocking, and workflow logic are enforced.
+
 ## Core Workflow
 
 ```mermaid
