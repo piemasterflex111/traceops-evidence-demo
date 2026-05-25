@@ -154,6 +154,14 @@ python -m pip install -e ".[test]"
 python -m uvicorn app.main:app --reload
 ```
 
+Open Swagger at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+This project is a demo-safe evidence workflow backend. It exposes fake applications, evidence records, dashboard summaries, interview packets, and gap trackers as explicit FastAPI read models so the workflow can be inspected without adding private job, company, recruiter, or personal interview data.
+
 ## Running The Demo
 
 ```powershell
@@ -168,8 +176,7 @@ stays out of Git.
 ```powershell
 python -m pytest -q
 python scripts/check_public_safety.py
-python scripts/run_demo.py
-python scripts/check_public_safety.py
+python scripts/smoke_api.py
 ```
 
 ## What Not To Commit

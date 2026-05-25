@@ -21,3 +21,6 @@ test = [
 [tool.setuptools.packages.find]
 include = ["app*"]
 exclude = ["data*", "docs*", "outputs*", "scripts*", "tests*"]
+
+[tool.pytest.ini_options]
+addopts = "--basetemp=.pytest_tmp"

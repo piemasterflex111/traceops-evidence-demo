@@ -4,6 +4,15 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from app.claim_policy import classify_matches
+from app.demo_api_data import (
+    get_application_detail,
+    get_dashboard_summary,
+    get_gaps,
+    get_interview_packet,
+    list_applications,
+    list_evidence,
+    list_prep_actions,
+)
 from app.evidence_loader import load_evidence_files, load_role_description
 from app.report_writer import build_markdown_report, write_report
 from app.requirement_mapper import extract_requirements, map_requirements_to_evidence
@@ -15,6 +24,87 @@ ROLE_PATH = DATA_DIR / "sample_role_description.md"
 OUTPUT_PATH = PROJECT_ROOT / "outputs" / "demo_report.md"
 
 app = FastAPI(title="TraceOps Evidence Demo")
+
+ROUTE_CATALOG = [
+    {
+        "method": "GET",
+        "path": "/health",
+        "purpose": "Health check for local verification.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/applications",
+        "purpose": "List public-safe demo applications.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/applications/{application_id}",
+        "purpose": "Application detail, requirements, evidence, and matrix.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/evidence",
+        "purpose": "List public-safe demo evidence records.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/dashboard/summary",
+        "purpose": "Dashboard summary read model.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/dashboard/prep-actions",
+        "purpose": "Dashboard prep action cards.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/applications/{application_id}/interview-packet",
+        "purpose": "Interview packet for a demo application.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/api/applications/{application_id}/gaps",
+        "purpose": "Gap tracker rows for a demo application.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/",
+        "purpose": "Human-readable route index and demo overview.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/evidence",
+        "purpose": "Legacy evidence inventory endpoint.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/report",
+        "purpose": "Plain-text markdown report preview.",
+        "browser_openable": True,
+    },
+    {
+        "method": "GET",
+        "path": "/demo/evidence",
+        "purpose": "Legacy demo evidence endpoint.",
+        "browser_openable": True,
+    },
+    {
+        "method": "POST",
+        "path": "/demo/report",
+        "purpose": "POST-only report generation endpoint.",
+        "browser_openable": False,
+    },
+]
 
 
 def run_workflow(output_path: Path = OUTPUT_PATH) -> dict[str, object]:
@@ -80,9 +170,73 @@ def _html_page(title: str, body: str) -> HTMLResponse:
     return HTMLResponse(html)
 
 
+def _route_link(path: str) -> str:
+    demo_application_id = "aerospace-test-automation"
+    return path.replace("{application_id}", demo_application_id)
+
+
+def _route_rows() -> str:
+    rows = []
+    for route in ROUTE_CATALOG:
+        path = str(route["path"])
+        method = str(route["method"])
+        purpose = str(route["purpose"])
+        if route["browser_openable"]:
+            display_path = _route_link(path)
+            path_html = f'<a href="{display_path}"><code>{path}</code></a>'
+            browser = "Yes"
+        else:
+            path_html = f"<code>{path}</code>"
+            browser = "No; POST-only"
+        rows.append(
+            "<tr>"
+            f"<td><code>{method}</code></td>"
+            f"<td>{path_html}</td>"
+            f"<td>{purpose}</td>"
+            f"<td>{browser}</td>"
+            "</tr>"
+        )
+    return "\n".join(rows)
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/applications")
+def api_applications() -> list[dict[str, object]]:
+    return list_applications()
+
+
+@app.get("/api/applications/{application_id}")
+def api_application_detail(application_id: str) -> dict[str, object]:
+    return get_application_detail(application_id)
+
+
+@app.get("/api/evidence")
+def api_evidence() -> list[dict[str, object]]:
+    return list_evidence()
+
+
+@app.get("/api/dashboard/summary")
+def api_dashboard_summary() -> dict[str, object]:
+    return get_dashboard_summary()
+
+
+@app.get("/api/dashboard/prep-actions")
+def api_dashboard_prep_actions() -> list[dict[str, str]]:
+    return list_prep_actions()
+
+
+@app.get("/api/applications/{application_id}/interview-packet")
+def api_interview_packet(application_id: str) -> dict[str, object]:
+    return get_interview_packet(application_id)
+
+
+@app.get("/api/applications/{application_id}/gaps")
+def api_application_gaps(application_id: str) -> list[dict[str, object]]:
+    return get_gaps(application_id)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -107,11 +261,20 @@ def index() -> HTMLResponse:
 </section>
 <section>
   <h2>Routes</h2>
-  <ul>
-    <li><code>/evidence</code></li>
-    <li><code>/report</code></li>
-    <li><code>/demo/report</code></li>
-  </ul>
+  <p>Browser-openable GET routes are linked. <code>POST /demo/report</code> is POST-only and must be called from Swagger, PowerShell, curl, or client code. It is not meant to work from the browser address bar.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Path</th>
+        <th>Purpose</th>
+        <th>Browser-openable</th>
+      </tr>
+    </thead>
+    <tbody>
+      {_route_rows()}
+    </tbody>
+  </table>
 </section>
 """
     return _html_page("TraceOps Evidence Demo", body)
