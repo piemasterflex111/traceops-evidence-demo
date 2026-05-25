@@ -20,6 +20,7 @@ The repo is meant to show a practical internal-tool pattern:
 - reviewable markdown report generation
 - simple FastAPI route-level demo
 - public-data safety checks
+- public-safe agent integration contract for a future private Qwen/vLLM backend
 
 ## Redacted Workflow Preview
 
@@ -83,6 +84,30 @@ flowchart LR
     F --> G["Unsupported claim review"]
 ```
 
+## Agent Integration Contract
+
+The public repo now exposes a machine-readable contract for the future private agent backend:
+
+- `GET /agent/contract`
+- `app/agent_contract.py`
+- `docs/agent_integration_contract.md`
+
+The contract documents the boundary between this public fake-data demo and a private Qwen/vLLM FastAPI agent service. The intended private backend pattern is:
+
+```text
+Lovable / React UI
+  -> FastAPI agent backend
+  -> Python orchestrator
+  -> Qwen served by vLLM
+  -> deterministic tools
+  -> schema validation
+  -> database run history
+  -> human review
+  -> markdown export
+```
+
+This keeps the strongest engineering claim precise: the public repo proves the evidence-governance workflow, while the future private service can add LLM-backed structured extraction without leaking private data.
+
 ## Key Capabilities
 
 - Loads fake markdown evidence from `data/demo_evidence/`.
@@ -94,8 +119,9 @@ flowchart LR
 - Writes `outputs/demo_report.md` from the demo workflow.
 - Provides a committed example report at `docs/examples/demo_report_example.md`.
 - Exposes the workflow through simple FastAPI routes.
+- Exposes `GET /agent/contract` as a public-safe backend/UI integration contract.
 - Runs pytest coverage for evidence loading, mapping, claim policy,
-  report output, routes, demo execution, and public safety scanning.
+  report output, routes, demo execution, public safety scanning, and the agent contract.
 
 ## Evidence Governance
 
@@ -117,10 +143,11 @@ Run the app with Uvicorn and inspect these routes:
 - `GET /health`
 - `GET /evidence`
 - `GET /report`
+- `GET /agent/contract`
 - `POST /demo/report`
 
 The UI is intentionally simple. It shows evidence inventory, requirements,
-decision counts, claim sections, source provenance, and public safety status.
+decision counts, claim sections, source provenance, public safety status, and the agent integration boundary.
 
 ## Example Decision Table
 
@@ -136,15 +163,16 @@ decision counts, claim sections, source provenance, and public safety status.
 ```text
 app/
   FastAPI routes, evidence loading, requirement mapping, claim policy,
-  report writing
+  agent integration contract, and report writing
 data/demo_evidence/
   fake role description and fake engineering evidence notes
 docs/
-  architecture notes, usage docs, limitations, checklist, and example outputs
+  architecture notes, usage docs, limitations, checklist, agent contract,
+  and example outputs
 scripts/
   demo runner and public safety scanner
 tests/
-  pytest coverage for workflow behavior and failure modes
+  pytest coverage for workflow behavior, API contract, and failure modes
 ```
 
 ## Running Locally
@@ -199,7 +227,8 @@ placeholder terms and skips generated output and local cache folders.
 
 - Fake data only.
 - Deterministic keyword and rule matching only.
-- No LLM integration.
+- No LLM integration inside the public repo.
 - No external APIs.
 - No production retrieval system.
 - Public demo only.
+- The Qwen/vLLM agent backend is documented as an integration contract, not implemented here.
