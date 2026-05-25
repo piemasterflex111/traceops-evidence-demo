@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
+from app.agent_contract import get_agent_integration_contract
 from app.claim_policy import classify_matches
 from app.evidence_loader import load_evidence_files, load_role_description
 from app.report_writer import build_markdown_report, write_report
@@ -111,6 +112,7 @@ def index() -> HTMLResponse:
     <li><code>/evidence</code></li>
     <li><code>/report</code></li>
     <li><code>/demo/report</code></li>
+    <li><code>/agent/contract</code></li>
   </ul>
 </section>
 """
@@ -151,3 +153,8 @@ def demo_report() -> dict[str, object]:
         "requirement_count": result["requirement_count"],
         "evidence_count": result["evidence_count"],
     }
+
+
+@app.get("/agent/contract")
+def agent_contract() -> dict[str, object]:
+    return get_agent_integration_contract()
