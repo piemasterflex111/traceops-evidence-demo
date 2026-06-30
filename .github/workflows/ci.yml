@@ -23,8 +23,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[test]"
 
-      - name: Run tests
+      - name: Create .env for test middleware
         run: |
-          pytest tests -v --tb=short
+          mkdir -p data
+          echo "EVDV_DB_PATH=data" > .env
+          echo "JIRA_PUBLIC_RABBI_URL=" >> .env
+          echo "JIRA_EMAIL=" >> .env
+          echo "JIRA_API_TOKEN=***" >> .env
+
+      - name: Run tests
         env:
-          PYTHONDONTWRITEBYTECODE: 1
+          PYTHONPATH: "."
+        run: python -m pytest tests/ -v
